@@ -1,5 +1,6 @@
 import os
 import base64
+import html
 
 from flask import Flask, request
 from model import Message 
@@ -25,13 +26,14 @@ def home():
 
 <h2>Wisdom From Your Fellow Classmates</h2>
 """
-    
+    s = html.escape( """& < " ' >""" )
     for m in Message.select():
         body += """
 <div class="message">
 {}
 </div>
-""".format(m.content)
+""".format(m.content.replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;').replace('"','&quot;'))
+
 
     return body 
 
